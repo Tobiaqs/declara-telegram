@@ -31,6 +31,14 @@ dispatcher = updater.dispatcher
 user_data = UserData("data.json")
 
 
+def start(update: Update, context: CallbackContext):
+    if str(update.message.chat.id) == environ["TELEGRAM_APPROVED_GROUP"]:
+        user_data.approve(update.message.from_user.id)
+        update.message.from_user.send_message(
+            text="Je kunt nu beginnen aan je declaratie. Stuur een bonnetje of typ een regel in. Of typ /help voor hulp.",
+        )
+
+
 def help(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -148,6 +156,7 @@ def send(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ E-mail verzonden.")
 
 
+dispatcher.add_handler(CommandHandler("start", start))
 dispatcher.add_handler(CommandHandler("help", help))
 dispatcher.add_handler(CommandHandler("show", show))
 dispatcher.add_handler(CommandHandler("profile", profile))

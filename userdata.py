@@ -31,7 +31,14 @@ class UserData:
 
     def _is_valid(self, user_id):
         data = self.user_data[user_id]
-        return data["email"] and data["name"] and data["iban"] and data["rows"] and data["attachments"]
+        return (
+            data["email"]
+            and data["name"]
+            and data["iban"]
+            and data["rows"]
+            and data["attachments"]
+            and data["approved"]
+        )
 
     def reset_user(self, user_id):
         self._init_user_if_not_exist(user_id)
@@ -49,6 +56,7 @@ class UserData:
                 "rows": [],
                 "attachments": [],
                 "send_to_board": True,
+                "approved": False,
             }
             self._store_data()
 
@@ -71,6 +79,11 @@ class UserData:
     def add_attachment(self, user_id, url):
         self._init_user_if_not_exist(user_id)
         self.user_data[user_id]["attachments"].append(url)
+        self._store_data()
+
+    def approve(self, user_id):
+        self._init_user_if_not_exist(user_id)
+        self.user_data[user_id]["approved"] = True
         self._store_data()
 
     def update_iban(self, user_id, iban):
@@ -109,10 +122,9 @@ class UserData:
             return (
                 f'name: {data["name"]}\n'
                 f'email: {data["email"]}\n'
-                f'iban: {data["iban"]}\n'
-                f'rows: {data["rows"]}\n'
-                f'send to board: {data["send_to_board"]}\n'
-                f'files: {data["attachments"]}'
+                f'IBAN: {data["iban"]}\n'
+                f'send to board: {str(data["send_to_board"]).lower()}\n'
+                f'approved: {str(data["approved"]).lower()}\n'
             )
         else:
             return self.user_data[user_id]
