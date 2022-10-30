@@ -156,16 +156,16 @@ def send(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=f"✅ E-mail verzonden.")
 
 
-dispatcher.add_handler(CommandHandler("start", start))
-dispatcher.add_handler(CommandHandler("help", help))
-dispatcher.add_handler(CommandHandler("show", show))
-dispatcher.add_handler(CommandHandler("profile", profile))
-dispatcher.add_handler(CommandHandler("board", board))
-dispatcher.add_handler(CommandHandler("name", name))
-dispatcher.add_handler(CommandHandler("email", email))
-dispatcher.add_handler(CommandHandler("reset", reset))
-dispatcher.add_handler(CommandHandler("iban", iban))
-dispatcher.add_handler(CommandHandler("send", send))
+dispatcher.add_handler(CommandHandler("start", start, Filters.chat_type.group))
+dispatcher.add_handler(CommandHandler("help", help, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("show", show, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("profile", profile, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("board", board, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("name", name, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("email", email, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("reset", reset, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("iban", iban, Filters.chat_type.private))
+dispatcher.add_handler(CommandHandler("send", send, Filters.chat_type.private))
 
 
 def text(update: Update, context: CallbackContext):
@@ -220,7 +220,7 @@ def document(update: Update, context: CallbackContext):
     )
 
 
-dispatcher.add_handler(MessageHandler(Filters.photo, image))
-dispatcher.add_handler(MessageHandler(Filters.document, document))
+dispatcher.add_handler(MessageHandler(Filters.photo & Filters.chat_type.private, image))
+dispatcher.add_handler(MessageHandler(Filters.document & Filters.chat_type.private, document))
 
 updater.start_polling()
